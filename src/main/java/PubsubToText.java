@@ -20,7 +20,7 @@ public class PubsubToText {
 
         DataflowPipelineOptions dataflowOptions = options.as(DataflowPipelineOptions.class);
         dataflowOptions.setRunner(DataflowRunner.class);
-        dataflowOptions.setProject("my-project");
+        dataflowOptions.setProject("dataflow-sample");
         dataflowOptions.setStagingLocation("gs://dataflow-sample-bucket/staging");
         dataflowOptions.setTemplateLocation("gs://dataflow-sample-bucket/templates/MyTemplate");
         dataflowOptions.setStreaming(true);
@@ -42,7 +42,7 @@ public class PubsubToText {
          *   3) Output the windowed files to GCS
          */
         p.apply("Read PubSub Events", PubsubIO.readMessagesWithAttributes().fromTopic(topic))
-                .apply( "60s Window",
+                .apply( "30s Window",
                         Window.into(FixedWindows.of(Duration.standardSeconds(30))))
                 .apply("Load Image", ParDo.of(new LoadImageFn()))
                 .apply("Write File(s)", TextIO.write()
