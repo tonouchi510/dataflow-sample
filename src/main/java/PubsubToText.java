@@ -44,7 +44,7 @@ public class PubsubToText {
         p.apply("Read PubSub Events", PubsubIO.readMessagesWithAttributes().fromTopic(topic))
                 .apply( "60s Window",
                         Window.into(FixedWindows.of(Duration.standardSeconds(30))))
-                .apply("PubSub Message Converter", ParDo.of(new ParseMessageFn()))
+                .apply("Load Image", ParDo.of(new LoadImageFn()))
                 .apply("Write File(s)", TextIO.write()
                         .withWindowedWrites()
                         .withNumShards(1)
